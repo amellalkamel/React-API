@@ -1,4 +1,3 @@
-import { computeHeadingLevel } from "@testing-library/react";
 import React from "react";
 import FormSearch from "./FormSearch";
 import Info from "./Info";
@@ -20,7 +19,7 @@ class Form extends React.Component {
   }
   async componentWillMount() {
     const x = await fetch(
-      "http://newsapi.org/v2/everything?q=bitcoin&from=2020-11-17&sortBy=publishedAt&apiKey=761c349ec59f4915ab84e9ff1fb27f6d"
+      "http://newsapi.org/v2/everything?q=bitcoin&from=2020-11-20&sortBy=publishedAt&apiKey=761c349ec59f4915ab84e9ff1fb27f6d"
     );
 
     x.json().then(async (data) => {
@@ -28,11 +27,11 @@ class Form extends React.Component {
       await this.setState({
         initial: [...data.articles],
       });
+      await this.setState({
+        resultsAPI: [...this.state.initial],
+      });
     });
   }
-  // componentDidUpdate() {
-  //   console.log("resultsAPI in  componentDidUpdate", this.state);
-  // }
   handleChange = async (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -44,22 +43,15 @@ class Form extends React.Component {
     });
 
     const NewARRay = this.state.resultsAPI.filter((r) =>
-      r.author.includes(value)
+      r.source.name.includes(value)
     );
 
-    this.setState({
+    await this.setState({
       resultsAPI: [...NewARRay],
     });
   };
-  handleClick = (event) => {
-    this.setState({
-      step: 2,
-    });
-    console.log("je suis clicker");
-  };
+  handleClick = (event) => {};
   render() {
-    {
-    }
     return (
       <>
         <FormSearch
@@ -67,11 +59,12 @@ class Form extends React.Component {
           handleChange={this.handleChange}
           handleClick={this.handleClick}
         />
+        <br />
         <ul>
-          {/* {console.log("state dans compon", this.state.resultsAPI)} */}
           {this.state.resultsAPI.map((results, index) => (
             <Info
               key={index}
+              avatar={results.urlToImage}
               name={results.source.name}
               author={results.author}
               publishedAt={results.publishedAt}
