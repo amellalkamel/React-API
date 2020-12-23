@@ -13,17 +13,18 @@ class Form extends React.Component {
       name: "",
       email: "",
       age: "",
+      filter: "title",
       resultsAPI: [],
       initial: [],
     };
   }
   async componentWillMount() {
     const x = await fetch(
-      "http://newsapi.org/v2/everything?q=bitcoin&from=2020-11-20&sortBy=publishedAt&apiKey=761c349ec59f4915ab84e9ff1fb27f6d"
+      "http://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=761c349ec59f4915ab84e9ff1fb27f6d"
     );
 
     x.json().then(async (data) => {
-      console.log("data is ", data);
+      // console.log("data is ", data);
       await this.setState({
         initial: [...data.articles],
       });
@@ -41,13 +42,27 @@ class Form extends React.Component {
     await this.setState({
       resultsAPI: [...this.state.initial],
     });
-
-    const NewARRay = this.state.resultsAPI.filter((r) =>
-      r.source.name.includes(value)
-    );
+    console.log("this.state.filter", this.state.filter);
+    var NewARRay = [];
+    if (this.state.filter === "title") {
+      NewARRay = this.state.resultsAPI.filter((r) => r.title.includes(value));
+    } else if (this.state.filter === "author") {
+      NewARRay = this.state.resultsAPI.filter((r) => r.author.includes(value));
+    } else {
+      NewARRay = this.state.resultsAPI.filter((r) =>
+        r.source.name.includes(value)
+      );
+    }
 
     await this.setState({
       resultsAPI: [...NewARRay],
+    });
+  };
+  handleCheck = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    this.setState({
+      [name]: value,
     });
   };
   handleClick = (event) => {};
@@ -58,6 +73,7 @@ class Form extends React.Component {
           {...this.state}
           handleChange={this.handleChange}
           handleClick={this.handleClick}
+          handleCheck={this.handleCheck}
         />
         <br />
         <ul>

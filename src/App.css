@@ -50,7 +50,7 @@ input[type="text"] {
   box-shadow: 10px 10px 25px -16px rgba(0, 0, 0, 0.75);
   border-radius: 10px;
   max-width: 550px;
-  max-height: 150px;
+  max-height: 170px;
   margin-bottom: 10px;
   margin-top: 40px;
 }
@@ -62,4 +62,17 @@ input[type="text"] {
 .contact-card img {
   height: 100px;
   width: 100px;
+}
+.filter-container {
+  display: inline-grid;
+  padding: 10px;
+  color: black;
+  background-color: slategrey;
+  font-family: sans-serif;
+  box-shadow: 10px 10px 25px -16px black;
+  border-radius: 10px;
+  max-width: 115px;
+  max-height: 115px;
+  margin-top: 60px;
+  margin-left: -282px;
 }
