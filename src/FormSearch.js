@@ -18,7 +18,6 @@ class FormSearch extends React.Component {
               value={this.props.search}
               onChange={this.props.handleChange}
             />
-            <button onClick={this.props.handleClick}>Search</button>
           </form>
         </div>
         <div className="filter-container">
