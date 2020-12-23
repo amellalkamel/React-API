@@ -17,6 +17,7 @@ class Form extends React.Component {
       filter: "title",
       resultsAPI: [],
       initial: [],
+      NewARRay: [],
       currentPage: 0,
       perPage: 5,
     };
@@ -38,7 +39,7 @@ class Form extends React.Component {
         this.state.offset,
         this.state.offset + this.state.perPage
       );
-      console.log("-----------slice", slice);
+      console.log("slice -----------", slice);
       this.setState({
         pageCount: Math.ceil(data.articles.length / this.state.perPage),
         initial: data.articles,
@@ -61,33 +62,39 @@ class Form extends React.Component {
     await this.setState({
       resultsAPI: [...this.state.initial],
     });
-    var NewARRay = [];
+
     if (this.state.filter === "title") {
-      NewARRay = this.state.resultsAPI.filter((r) => r.title.includes(value));
+      this.setState({
+        NewARRay: this.state.resultsAPI.filter((r) => r.title.includes(value)),
+      });
     } else if (this.state.filter === "author") {
-      NewARRay = this.state.resultsAPI.filter((r) =>
-        r.author ? r.author.includes(value) : null
-      );
+      this.setState({
+        NewARRay: this.state.resultsAPI.filter((r) =>
+          r.author ? r.author.includes(value) : null
+        ),
+      });
     } else {
-      NewARRay = this.state.resultsAPI.filter((r) =>
-        r.source.name.includes(value)
-      );
+      this.setState({
+        NewARRay: this.state.resultsAPI.filter((r) =>
+          r.source.name.includes(value)
+        ),
+      });
     }
     console.log(
       "NewARRay ----------->",
-      NewARRay,
+      this.state.NewARRay,
       "NewARRay lenght ------->",
-      NewARRay.length
+      this.state.NewARRay.length
     );
     await this.setState({
-      resultsAPI: [...NewARRay],
+      resultsAPI: [...this.state.NewARRay],
     });
-    var slice = NewARRay.slice(
+    var slice = this.state.NewARRay.slice(
       this.state.offset,
       this.state.offset + this.state.perPage
     );
     this.setState({
-      pageCount: Math.ceil(NewARRay.length / this.state.perPage),
+      pageCount: Math.ceil(this.state.NewARRay.length / this.state.perPage),
       resultsAPI: slice,
     });
     console.log("pageCount ---------->", this.state.pageCount);
@@ -114,18 +121,32 @@ class Form extends React.Component {
   };
   loadMoreData = () => {
     //data = les 20 data
-    console.log("this.state.initial -------->", this.state.initial);
-    const data = this.state.initial;
+    if (this.state.search) {
+      console.log("you have a data to search", this.state.NewARRay);
+      const data = this.state.NewARRay;
 
-    const slice = data.slice(
-      this.state.offset,
-      this.state.offset + this.state.perPage
-    );
-    console.log("slice ============>", slice);
-    this.setState({
-      pageCount: Math.ceil(data.length / this.state.perPage),
-      resultsAPI: slice,
-    });
+      const slice = data.slice(
+        this.state.offset,
+        this.state.offset + this.state.perPage
+      );
+      this.setState({
+        pageCount: Math.ceil(data.length / this.state.perPage),
+        resultsAPI: slice,
+      });
+    } else {
+      console.log("this.state.initial -------->", this.state.initial);
+      const data = this.state.initial;
+
+      const slice = data.slice(
+        this.state.offset,
+        this.state.offset + this.state.perPage
+      );
+      console.log("slice ============>", slice);
+      this.setState({
+        pageCount: Math.ceil(data.length / this.state.perPage),
+        resultsAPI: slice,
+      });
+    }
   };
   render() {
     return (
